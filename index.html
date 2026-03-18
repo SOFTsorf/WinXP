@@ -3,12 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Windows XP Mobile & Desktop</title>
+    <title>Windows XP Professional - Complete Edition</title>
     <style>
         :root {
             --xp-blue: #0058e4;
             --xp-taskbar: linear-gradient(to bottom, #245edb 0%, #3f8cf3 9%, #245edb 18%, #245edb 92%, #333 100%);
             --xp-win-bg: #ece9d8;
+            --xp-start-left: #fff;
+            --xp-start-right: #d3e5fa;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -17,140 +19,104 @@
             background: #004e98 url('https://d7hftxdivxxvm.cloudfront.net/?quality=50&resize_to=width&src=https%3A%2F%2Fartsy-media-uploads.s3.amazonaws.com%2F2RNK1P0BYVrSCZEy_Sd1Ew%252F3417757448_4a6bdf36ce_o.jpg&width=1820') no-repeat center center fixed;
             background-size: cover;
             font-family: 'Tahoma', sans-serif;
-            height: 100vh;
-            overflow: hidden;
-            margin: 0;
-            user-select: none;
-            touch-action: none; /* Verhindert Browser-Zoom/Scrollen beim Draggen */
+            height: 100vh; overflow: hidden; margin: 0; user-select: none; touch-action: none;
         }
 
         /* DESKTOP */
         .desktop {
-            height: calc(100vh - 30px);
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            flex-wrap: wrap;
-            align-content: flex-start;
-            gap: 10px;
+            height: calc(100vh - 30px); padding: 10px;
+            display: flex; flex-direction: column; flex-wrap: wrap; align-content: flex-start; gap: 5px;
         }
 
         .icon {
-            width: 75px;
-            padding: 5px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            cursor: pointer;
-            border: 1px solid transparent;
+            width: 80px; padding: 5px; display: flex; flex-direction: column; align-items: center;
+            text-align: center; cursor: pointer; border: 1px solid transparent; margin-bottom: 10px;
         }
-
-        .icon:active, .icon.selected {
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px dotted #fff;
-        }
-
-        .icon img { width: 32px; height: 32px; margin-bottom: 5px; }
-        .icon span { color: white; text-shadow: 1px 1px 2px black; font-size: 11px; }
+        .icon:active { background: rgba(255, 255, 255, 0.2); border: 1px dotted #fff; }
+        .icon img { width: 32px; height: 32px; margin-bottom: 4px; pointer-events: none; }
+        .icon span { color: white; text-shadow: 1px 1px 2px black; font-size: 11px; line-height: 1.2; }
 
         /* WINDOWS */
         .window {
-            position: absolute;
-            background: var(--xp-win-bg);
-            border: 3px solid var(--xp-blue);
-            border-top-left-radius: 8px;
-            border-top-right-radius: 8px;
-            display: none;
-            flex-direction: column;
-            min-width: 200px;
-            box-shadow: 5px 5px 15px rgba(0,0,0,0.3);
-            z-index: 10;
+            position: absolute; background: var(--xp-win-bg); border: 3px solid var(--xp-blue);
+            border-top-left-radius: 8px; border-top-right-radius: 8px;
+            display: none; flex-direction: column; min-width: 250px;
+            box-shadow: 2px 2px 15px rgba(0,0,0,0.4); z-index: 10;
         }
-
-        /* Responsive Anpassung für Handy */
-        @media (max-width: 600px) {
-            .window:not(.maximized) {
-                width: 90% !important;
-                left: 5% !important;
-            }
-        }
-
         .window.maximized {
-            top: 0 !important; left: 0 !important;
-            width: 100vw !important; height: calc(100vh - 30px) !important;
+            top: 0 !important; left: 0 !important; width: 100vw !important; height: calc(100vh - 30px) !important;
             border-radius: 0; border: none;
         }
-
         .title-bar {
             background: linear-gradient(to bottom, #0058e4 0%, #3b8cf8 10%, #0058e4 100%);
-            color: white; padding: 4px 8px; font-weight: bold;
-            display: flex; justify-content: space-between; align-items: center;
-            height: 28px; cursor: move;
+            color: white; padding: 4px 8px; font-weight: bold; height: 28px;
+            display: flex; justify-content: space-between; align-items: center; cursor: move;
         }
-
-        .controls { display: flex; gap: 3px; }
+        .controls { display: flex; gap: 2px; }
         .controls button {
             width: 21px; height: 21px; border: 1px solid white; border-radius: 2px;
             color: white; font-weight: bold; cursor: pointer;
             background: linear-gradient(to bottom, #4a8df8, #1860e6);
         }
         .controls .btn-close { background: linear-gradient(to bottom, #e76d4e, #b53010); }
-
-        .window-content {
-            flex-grow: 1; background: white; margin: 2px;
-            border: 1px solid #7f9db9; overflow: auto;
-        }
+        .window-content { flex-grow: 1; background: white; margin: 2px; border: 1px solid #7f9db9; overflow: auto; }
 
         /* TASKBAR */
         .taskbar {
             position: fixed; bottom: 0; width: 100%; height: 30px;
             background: var(--xp-taskbar); display: flex; align-items: center; z-index: 9999;
         }
-
         .start-button {
             background: linear-gradient(to bottom, #388e3c 0%, #4caf50 10%, #388e3c 90%, #1b5e20 100%);
             color: white; font-style: italic; font-weight: bold; font-size: 15px;
-            padding: 0 15px; height: 100%; border: none;
-            border-top-right-radius: 12px; border-bottom-right-radius: 12px;
-            cursor: pointer; box-shadow: inset 1px 1px 2px white;
+            padding: 0 12px; height: 100%; border: none; border-top-right-radius: 12px;
+            border-bottom-right-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 5px;
+            box-shadow: inset 1px 1px 1px white;
         }
-
-        .task-tabs { display: flex; flex-grow: 1; padding: 0 5px; gap: 4px; overflow: hidden; }
+        .task-tabs { display: flex; flex-grow: 1; padding: 0 5px; gap: 3px; overflow: hidden; }
         .tab {
-            background: #3a78d8; color: white; font-size: 11px; padding: 0 10px;
-            height: 24px; border-radius: 3px; display: flex; align-items: center;
-            min-width: 60px; max-width: 120px; cursor: pointer; border: 1px solid #0058e4;
+            background: #3a78d8; color: white; font-size: 11px; padding: 0 8px;
+            height: 24px; border-radius: 2px; display: flex; align-items: center;
+            min-width: 80px; max-width: 150px; cursor: pointer; border: 1px solid #0058e4;
         }
         .tab.active { background: #1b52a1; }
-
         .clock {
             background: #1290eb; color: white; padding: 0 10px; height: 100%;
             display: flex; align-items: center; font-size: 11px; border-left: 1px solid #0856b3;
         }
 
-        /* START MENU */
+        /* START MENU (Zwei Spalten) */
         #startMenu {
-            position: fixed; bottom: 30px; left: 0; width: 280px;
-            background: white; border: 1px solid var(--xp-blue);
-            display: none; flex-direction: column; z-index: 10000;
-            box-shadow: 2px -2px 10px rgba(0,0,0,0.5);
+            position: fixed; bottom: 30px; left: 0; width: 380px; height: 450px;
+            background: white; border: 1px solid var(--xp-blue); border-top-left-radius: 6px; border-top-right-radius: 6px;
+            display: none; flex-direction: column; z-index: 10000; box-shadow: 2px -2px 15px rgba(0,0,0,0.5);
         }
-
-        .start-top { background: linear-gradient(to bottom, #1d5ba5, #4388e6); color: white; padding: 10px; font-weight: bold; }
-        .start-item { padding: 8px 15px; display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 13px; }
+        .start-user {
+            background: linear-gradient(to bottom, #1d5ba5, #4388e6); padding: 8px;
+            display: flex; align-items: center; gap: 10px; color: white; font-weight: bold;
+        }
+        .user-pic { width: 36px; height: 36px; border: 2px solid #fff; border-radius: 3px; background: #fff; }
+        .start-columns { display: flex; flex-grow: 1; border-top: 1px solid #ffcc00; }
+        .start-left { width: 50%; background: var(--xp-start-left); padding: 5px; }
+        .start-right { width: 50%; background: var(--xp-start-right); padding: 5px; border-left: 1px solid #91b0df; }
+        .start-item {
+            padding: 5px 10px; display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 12px; border-radius: 3px;
+        }
         .start-item:hover { background: #316ac5; color: white; }
+        .start-footer { background: #d3e5fa; padding: 8px; display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid #91b0df; }
+        .footer-btn { padding: 4px 8px; font-size: 11px; cursor: pointer; display: flex; align-items: center; gap: 5px; }
 
-        /* APPS */
-        #calcDisplay { width: 100%; text-align: right; padding: 10px; font-size: 20px; margin-bottom: 10px; }
-        .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; padding: 10px; }
-        .calc-grid button { padding: 15px; cursor: pointer; }
-        #notepadArea { width: 100%; height: 100%; border: none; padding: 10px; resize: none; font-family: monospace; }
+        iframe { width: 100%; height: 100%; border: none; }
+        #notepadArea { width: 100%; height: 100%; border: none; padding: 10px; resize: none; font-family: 'Courier New', monospace; outline: none; }
     </style>
 </head>
-<body>
+<body id="body">
 
 <div class="desktop" id="desktop" onclick="closeStart()">
+    <div class="icon" onclick="openApp('myCompWin', 'Arbeitsplatz')">
+        <img src="https://win98icons.alexmeub.com/icons/png/computer_explorer-4.png">
+        <span>Arbeitsplatz</span>
+    </div>
     <div class="icon" onclick="openApp('calcWin', 'Rechner')">
         <img src="https://win98icons.alexmeub.com/icons/png/calculator-0.png">
         <span>Rechner</span>
@@ -159,9 +125,13 @@
         <img src="https://win98icons.alexmeub.com/icons/png/notepad-0.png">
         <span>Editor</span>
     </div>
-    <div class="icon" onclick="openApp('ieWin', 'Internet')">
-        <img src="https://win98icons.alexmeub.com/icons/png/msie1-0.png">
-        <span>Internet</span>
+    <div class="icon" onclick="openApp('mineWin', 'Minesweeper')">
+        <img src="https://win98icons.alexmeub.com/icons/png/minesweeper-0.png">
+        <span>Minesweeper</span>
+    </div>
+    <div class="icon" onclick="openApp('solWin', 'Solitaire')">
+        <img src="https://win98icons.alexmeub.com/icons/png/game_solitaire-0.png">
+        <span>Solitaire</span>
     </div>
     <div class="icon" onclick="openApp('trashWin', 'Papierkorb')">
         <img src="https://win98icons.alexmeub.com/icons/png/recycle_bin_empty-0.png">
@@ -169,60 +139,88 @@
     </div>
 </div>
 
+<div class="window" id="myCompWin" style="width:450px; height:300px; top:40px; left:40px;">
+    <div class="title-bar" onmousedown="dragInit(event)" ontouchstart="dragInit(event)">
+        <span>💽 Arbeitsplatz</span>
+        <div class="controls"><button onclick="minApp('myCompWin')">_</button><button onclick="maxApp('myCompWin')">□</button><button class="btn-close" onclick="closeApp('myCompWin')">X</button></div>
+    </div>
+    <div class="window-content" style="padding:15px; display:flex; gap:20px;">
+        <div style="text-align:center; cursor:pointer;" onclick="alert('Lokaler Datenträger (C:) ist bereit.')">
+            <img src="https://win98icons.alexmeub.com/icons/png/hard_disk-0.png" width="32"><br><span style="font-size:11px;">System (C:)</span>
+        </div>
+        <div style="text-align:center; cursor:pointer;" onclick="alert('Bitte legen Sie einen Datenträger in Laufwerk (A:) ein.')">
+            <img src="https://win98icons.alexmeub.com/icons/png/floppy_drive-0.png" width="32"><br><span style="font-size:11px;">Diskette (A:)</span>
+        </div>
+    </div>
+</div>
+
+<div class="window" id="mineWin" style="width:300px; height:380px; top:60px; left:100px;">
+    <div class="title-bar" onmousedown="dragInit(event)" ontouchstart="dragInit(event)">
+        <span>💣 Minesweeper</span>
+        <div class="controls"><button onclick="minApp('mineWin')">_</button><button class="btn-close" onclick="closeApp('mineWin')">X</button></div>
+    </div>
+    <div class="window-content"><iframe src="https://minesweeper.online/de/classic"></iframe></div>
+</div>
+
+<div class="window" id="solWin" style="width:500px; height:400px; top:80px; left:150px;">
+    <div class="title-bar" onmousedown="dragInit(event)" ontouchstart="dragInit(event)">
+        <span>🃏 Solitaire</span>
+        <div class="controls"><button onclick="minApp('solWin')">_</button><button class="btn-close" onclick="closeApp('solWin')">X</button></div>
+    </div>
+    <div class="window-content"><iframe src="https://www.solitaire-spiel.de/klassisch/"></iframe></div>
+</div>
+
 <div class="window" id="calcWin" style="width:280px; height:350px; top:50px; left:20px;">
-    <div class="title-bar" onmousedown="dragInit(event)" ontouchstart="dragInit(event)">
-        <span>🔢 Rechner</span>
-        <div class="controls"><button onclick="minApp('calcWin')">_</button><button class="btn-close" onclick="closeApp('calcWin')">X</button></div>
-    </div>
-    <div class="window-content" style="background:#ece9d8;">
-        <input type="text" id="calcDisplay" readonly>
-        <div class="calc-grid">
-            <button onclick="calcIn('7')">7</button><button onclick="calcIn('8')">8</button><button onclick="calcIn('9')">9</button><button onclick="calcIn('/')">/</button>
-            <button onclick="calcIn('4')">4</button><button onclick="calcIn('5')">5</button><button onclick="calcIn('6')">6</button><button onclick="calcIn('*')">*</button>
-            <button onclick="calcIn('1')">1</button><button onclick="calcIn('2')">2</button><button onclick="calcIn('3')">3</button><button onclick="calcIn('-')">-</button>
-            <button onclick="calcClear()">C</button><button onclick="calcIn('0')">0</button><button onclick="calcEval()">=</button><button onclick="calcIn('+')">+</button>
+    <div class="title-bar" onmousedown="dragInit(event)" ontouchstart="dragInit(event)"><span>🔢 Rechner</span><div class="controls"><button onclick="minApp('calcWin')">_</button><button class="btn-close" onclick="closeApp('calcWin')">X</button></div></div>
+    <div class="window-content" style="background:#ece9d8;"><input type="text" id="calcDisplay" readonly style="width:100%; text-align:right; padding:10px; font-size:20px;">
+        <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:5px; padding:10px;">
+            <button style="padding:10px" onclick="calcIn('7')">7</button><button style="padding:10px" onclick="calcIn('8')">8</button><button style="padding:10px" onclick="calcIn('9')">9</button><button style="padding:10px" onclick="calcIn('/')">/</button>
+            <button style="padding:10px" onclick="calcIn('4')">4</button><button style="padding:10px" onclick="calcIn('5')">5</button><button style="padding:10px" onclick="calcIn('6')">6</button><button style="padding:10px" onclick="calcIn('*')">*</button>
+            <button style="padding:10px" onclick="calcIn('1')">1</button><button style="padding:10px" onclick="calcIn('2')">2</button><button style="padding:10px" onclick="calcIn('3')">3</button><button style="padding:10px" onclick="calcIn('-')">-</button>
+            <button style="padding:10px" onclick="calcClear()">C</button><button style="padding:10px" onclick="calcIn('0')">0</button><button style="padding:10px" onclick="calcEval()">=</button><button style="padding:10px" onclick="calcIn('+')">+</button>
         </div>
     </div>
 </div>
 
-<div class="window" id="noteWin" style="width:400px; height:300px; top:100px; left:50px;">
-    <div class="title-bar" onmousedown="dragInit(event)" ontouchstart="dragInit(event)">
-        <span>📝 Editor</span>
-        <div class="controls">
-            <button onclick="minApp('noteWin')">_</button>
-            <button onclick="maxApp('noteWin')">□</button>
-            <button class="btn-close" onclick="closeApp('noteWin')">X</button>
-        </div>
-    </div>
-    <div class="window-content"><textarea id="notepadArea" placeholder="Schreib was..."></textarea></div>
+<div class="window" id="noteWin" style="width:400px; height:300px; top:120px; left:60px;">
+    <div class="title-bar" onmousedown="dragInit(event)" ontouchstart="dragInit(event)"><span>📝 Editor</span><div class="controls"><button onclick="minApp('noteWin')">_</button><button onclick="maxApp('noteWin')">□</button><button class="btn-close" onclick="closeApp('noteWin')">X</button></div></div>
+    <div class="window-content"><textarea id="notepadArea"></textarea></div>
 </div>
 
-<div class="window" id="ieWin" style="width:600px; height:400px; top:30px; left:30px;">
-    <div class="title-bar" onmousedown="dragInit(event)" ontouchstart="dragInit(event)">
-        <span>🌐 Internet Explorer</span>
-        <div class="controls"><button onclick="minApp('ieWin')">_</button><button onclick="maxApp('ieWin')">□</button><button class="btn-close" onclick="closeApp('ieWin')">X</button></div>
-    </div>
-    <div class="window-content"><iframe src="https://www.wikipedia.org" style="width:100%; height:100%; border:none;"></iframe></div>
-</div>
-
-<div class="window" id="trashWin" style="width:300px; height:200px; top:150px; left:100px;">
-    <div class="title-bar" onmousedown="dragInit(event)" ontouchstart="dragInit(event)">
-        <span>🗑️ Papierkorb</span>
-        <div class="controls"><button class="btn-close" onclick="closeApp('trashWin')">X</button></div>
-    </div>
-    <div class="window-content" style="padding:20px; text-align:center;">Der Ordner ist leer.</div>
+<div class="window" id="trashWin" style="width:300px; height:200px; top:200px; left:200px;">
+    <div class="title-bar" onmousedown="dragInit(event)" ontouchstart="dragInit(event)"><span>🗑️ Papierkorb</span><div class="controls"><button class="btn-close" onclick="closeApp('trashWin')">X</button></div></div>
+    <div class="window-content" style="padding:20px; text-align:center;">Papierkorb ist leer.</div>
 </div>
 
 <div id="startMenu">
-    <div class="start-top">Administrator</div>
-    <div class="start-item" onclick="openApp('calcWin', 'Rechner')">🔢 Rechner</div>
-    <div class="start-item" onclick="openApp('noteWin', 'Editor')">📝 Editor</div>
-    <div class="start-item" onclick="location.reload()">🔄 Neustarten</div>
-    <div class="start-item" onclick="alert('Shutdown...')">🚪 Abmelden</div>
+    <div class="start-user">
+        <div class="user-pic"></div>
+        <span>Administrator</span>
+    </div>
+    <div class="start-columns">
+        <div class="start-left">
+            <div class="start-item" onclick="openApp('noteWin', 'Editor')"><img src="https://win98icons.alexmeub.com/icons/png/notepad-0.png" width="24"> Editor</div>
+            <div class="start-item" onclick="openApp('mineWin', 'Minesweeper')"><img src="https://win98icons.alexmeub.com/icons/png/minesweeper-0.png" width="24"> Minesweeper</div>
+            <div class="start-item" onclick="openApp('calcWin', 'Rechner')"><img src="https://win98icons.alexmeub.com/icons/png/calculator-0.png" width="24"> Rechner</div>
+        </div>
+        <div class="start-right">
+            <div class="start-item" style="font-weight:bold;" onclick="openApp('myCompWin', 'Arbeitsplatz')">Eigene Dateien</div>
+            <div class="start-item" style="font-weight:bold;" onclick="openApp('myCompWin', 'Arbeitsplatz')">Arbeitsplatz</div>
+            <hr style="border:0; border-top:1px solid #91b0df; margin:5px 0;">
+            <div class="start-item" onclick="alert('Systemsteuerung laden...')">Systemsteuerung</div>
+            <div class="start-item" onclick="alert('Hilfe wird geladen...')">Hilfe und Support</div>
+        </div>
+    </div>
+    <div class="start-footer">
+        <div class="footer-btn" onclick="location.reload()">🔒 Abmelden</div>
+        <div class="footer-btn" style="background:#e76d4e; color:white; border-radius:3px;" onclick="alert('System wird heruntergefahren...')">⭕ Ausschalten</div>
+    </div>
 </div>
 
 <div class="taskbar">
-    <button class="start-button" onclick="event.stopPropagation(); toggleStart()">start</button>
+    <button class="start-button" onclick="event.stopPropagation(); toggleStart()">
+        <img src="https://win98icons.alexmeub.com/icons/png/windows-0.png" width="16"> start
+    </button>
     <div class="task-tabs" id="taskTabs"></div>
     <div class="clock" id="clock">12:00</div>
 </div>
@@ -232,28 +230,16 @@
     let dragObj = null;
     let offX, offY;
 
-    // FENSTER LOGIK
-    function openApp(id, name) {
+    function openApp(id) {
         const win = document.getElementById(id);
         win.style.display = 'flex';
         focusWin(win);
         closeStart();
-        updateTabs();
     }
 
-    function closeApp(id) {
-        document.getElementById(id).style.display = 'none';
-        updateTabs();
-    }
-
-    function minApp(id) {
-        document.getElementById(id).style.display = 'none';
-        updateTabs();
-    }
-
-    function maxApp(id) {
-        document.getElementById(id).classList.toggle('maximized');
-    }
+    function closeApp(id) { document.getElementById(id).style.display = 'none'; updateTabs(); }
+    function minApp(id) { document.getElementById(id).style.display = 'none'; updateTabs(); }
+    function maxApp(id) { document.getElementById(id).classList.toggle('maximized'); }
 
     function focusWin(win) {
         highestZ++;
@@ -268,7 +254,6 @@
 
     function closeStart() { document.getElementById('startMenu').style.display = 'none'; }
 
-    // TASKBAR TABS
     function updateTabs() {
         const container = document.getElementById('taskTabs');
         container.innerHTML = '';
@@ -276,10 +261,10 @@
             if (win.style.display === 'flex') {
                 const title = win.querySelector('.title-bar span').innerText;
                 const tab = document.createElement('div');
-                tab.className = 'tab' + (win.style.zIndex == highestZ ? ' active' : '');
+                tab.className = 'tab' + (parseInt(win.style.zIndex) === highestZ ? ' active' : '');
                 tab.innerText = title;
                 tab.onclick = () => {
-                    if(win.style.zIndex == highestZ) { minApp(win.id); } 
+                    if (parseInt(win.style.zIndex) === highestZ) minApp(win.id);
                     else { win.style.display = 'flex'; focusWin(win); }
                 };
                 container.appendChild(tab);
@@ -287,19 +272,14 @@
         });
     }
 
-    // DRAG LOGIK (PC & MOBIL)
+    // Drag & Drop
     function dragInit(e) {
         const win = e.target.closest('.window');
         if (!win || win.classList.contains('maximized')) return;
-        dragObj = win;
-        focusWin(win);
-
-        const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
-        const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
-
-        offX = clientX - win.offsetLeft;
-        offY = clientY - win.offsetTop;
-
+        dragObj = win; focusWin(win);
+        const cx = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+        const cy = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+        offX = cx - win.offsetLeft; offY = cy - win.offsetTop;
         document.addEventListener('mousemove', dragMove);
         document.addEventListener('touchmove', dragMove, {passive: false});
         document.addEventListener('mouseup', dragEnd);
@@ -309,33 +289,25 @@
     function dragMove(e) {
         if (!dragObj) return;
         if (e.cancelable) e.preventDefault();
-
-        const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
-        const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
-
-        dragObj.style.left = (clientX - offX) + 'px';
-        dragObj.style.top = (clientY - offY) + 'px';
+        const cx = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+        const cy = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+        dragObj.style.left = (cx - offX) + 'px'; dragObj.style.top = (cy - offY) + 'px';
     }
 
-    function dragEnd() {
-        dragObj = null;
-        document.removeEventListener('mousemove', dragMove);
-        document.removeEventListener('touchmove', dragMove);
-    }
+    function dragEnd() { dragObj = null; }
 
-    // RECHNER
+    // Calc Logic
     const d = document.getElementById('calcDisplay');
     function calcIn(v) { d.value += v; }
     function calcClear() { d.value = ''; }
     function calcEval() { try { d.value = eval(d.value); } catch { d.value = 'Error'; } }
 
-    // UHR
+    // Uhr
     setInterval(() => {
         const now = new Date();
         document.getElementById('clock').innerText = now.getHours() + ":" + String(now.getMinutes()).padStart(2, '0');
     }, 1000);
 
-    // Initialer Fokus beim Klick
     document.querySelectorAll('.window').forEach(w => {
         w.addEventListener('mousedown', () => focusWin(w));
         w.addEventListener('touchstart', () => focusWin(w));
