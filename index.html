@@ -5,12 +5,13 @@
     <title>Windows XP - KI Edition</title>
     <style>
         :root {
-            --xp-blue: #245edb;
+            --xp-blue: #0058e4;
             --xp-taskbar: linear-gradient(to bottom, #245edb 0%, #3f8cf3 9%, #245edb 18%, #245edb 92%, #333 100%);
             --xp-start: linear-gradient(to bottom, #388e3c 0%, #4caf50 10%, #388e3c 90%, #1b5e20 100%);
         }
 
         body {
+            /* Zuverlässiger Link für das originale Bliss-Wallpaper */
             background: url('https://upload.wikimedia.org/wikipedia/commons/2/21/Wallpaper_Bliss.jpg') no-repeat center center fixed;
             background-size: cover;
             font-family: 'Tahoma', 'Segoe UI', sans-serif;
@@ -51,28 +52,58 @@
         .icon:hover { background: rgba(255,255,255,0.2); border-radius: 3px; }
 
         /* WINDOWS */
+        @keyframes openWindow {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
         .window {
             position: absolute;
             background: #ece9d8;
             border: 3px solid var(--xp-blue);
             border-top-left-radius: 8px;
             border-top-right-radius: 8px;
-            display: none; /* Startet versteckt */
+            display: none; 
             flex-direction: column;
             box-shadow: 3px 3px 10px rgba(0,0,0,0.5);
             z-index: 10;
+            animation: openWindow 0.15s ease-out;
+            transition: width 0.2s, height 0.2s, top 0.2s, left 0.2s;
+        }
+
+        .window.maximized {
+            top: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+            height: calc(100vh - 30px) !important;
+            border-radius: 0;
+            border: none;
         }
 
         .title-bar {
             background: linear-gradient(to bottom, #0058e4 0%, #3b8cf8 10%, #0058e4 100%);
             color: white;
-            padding: 3px 10px;
+            padding: 3px 8px;
             font-weight: bold;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            cursor: move;
+            cursor: default; /* Drag nur auf mousedown */
             height: 25px;
+            font-size: 13px;
+        }
+
+        .title-text {
+            flex-grow: 1;
+            cursor: move;
+            height: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        .controls {
+            display: flex;
+            gap: 2px;
         }
 
         .controls button {
@@ -81,12 +112,14 @@
             border: 1px solid white;
             color: white;
             font-weight: bold;
-            font-size: 12px;
+            font-size: 11px;
             cursor: pointer;
             border-radius: 2px;
+            background: linear-gradient(to bottom, #4a8df8, #1860e6);
         }
 
-        .btn-close { background: linear-gradient(to bottom, #e76d4e, #b53010); }
+        .controls button:hover { filter: brightness(1.2); }
+        .controls .btn-close { background: linear-gradient(to bottom, #e76d4e, #b53010); }
 
         .window-content {
             flex-grow: 1;
@@ -94,6 +127,8 @@
             margin: 2px;
             border: 1px solid #7f9db9;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
 
         /* TASKBAR */
@@ -120,18 +155,22 @@
             border-top-right-radius: 12px;
             border-bottom-right-radius: 12px;
             cursor: pointer;
+            box-shadow: inset 1px 1px 2px rgba(255,255,255,0.5);
         }
+
+        .start-button:active { background: #2e7d32; }
 
         .clock {
             margin-left: auto;
             background: #1290eb;
             color: white;
-            padding: 0 10px;
+            padding: 0 15px;
             height: 100%;
             display: flex;
             align-items: center;
             font-size: 11px;
             border-left: 1px solid #0856b3;
+            box-shadow: inset 1px 0px 2px rgba(255,255,255,0.3);
         }
 
         /* START MENU */
@@ -146,6 +185,8 @@
             box-shadow: 2px -2px 10px rgba(0,0,0,0.3);
             display: none;
             z-index: 10000;
+            border: 1px solid #0058e4;
+            border-bottom: none;
         }
 
         .start-header {
@@ -153,6 +194,7 @@
             color: white;
             padding: 10px;
             font-weight: bold;
+            font-size: 14px;
         }
 
         .start-item {
@@ -160,75 +202,98 @@
             display: flex;
             align-items: center;
             cursor: pointer;
+            font-size: 13px;
+            color: #333;
         }
 
         .start-item:hover { background: #316ac5; color: white; }
+        
+        /* Rechner Styles */
+        .calc-btn {
+            background: #f0f0f0; border: 1px solid #ccc; border-radius: 3px;
+            padding: 10px 0; cursor: pointer; font-family: Tahoma;
+        }
+        .calc-btn:active { background: #ddd; }
     </style>
 </head>
 <body>
 
-<div class="desktop">
-    <div class="icon" onclick="openApp('kiWin')">
-        <img src="https://lh3.googleusercontent.com/u/0/d/13UK7qNSLeyCp-DrSO895B5jM6XjpKJmf" alt="KI">
+<div class="desktop" onclick="toggleStart(true)">
+    <div class="icon" ondblclick="openApp('kiWin')" onclick="event.stopPropagation()">
+        <img src="https://win98icons.alexmeub.com/icons/png/network_internet_pcs_installer-2.png" alt="KI">
         <span>KI Assistent</span>
     </div>
-    <div class="icon" onclick="openApp('dinoWin')">
+    <div class="icon" ondblclick="openApp('dinoWin')" onclick="event.stopPropagation()">
         <img src="https://win98icons.alexmeub.com/icons/png/game_solitaire-0.png" alt="Game">
         <span>Dino Game</span>
     </div>
-    <div class="icon" onclick="openApp('calcWin')">
+    <div class="icon" ondblclick="openApp('calcWin')" onclick="event.stopPropagation()">
         <img src="https://win98icons.alexmeub.com/icons/png/calculator-0.png" alt="Calc">
         <span>Rechner</span>
     </div>
-    <div class="icon" onclick="openApp('musicWin')">
+    <div class="icon" ondblclick="openApp('musicWin')" onclick="event.stopPropagation()">
         <img src="https://win98icons.alexmeub.com/icons/png/cd_audio_cd_a-4.png" alt="Music">
         <span>Musik</span>
     </div>
 </div>
 
-<div class="window" id="kiWin" style="width:600px; height:450px; top:50px; left:50px;">
-    <div class="title-bar" onmousedown="dragInit(event, 'kiWin')">
-        <span>🤖 KI Assistent Alpha</span>
-        <div class="controls"><button class="btn-close" onclick="closeApp('kiWin')">X</button></div>
+<div class="window" id="kiWin" style="width:600px; height:450px; top:50px; left:50px;" onmousedown="focusWin(this)">
+    <div class="title-bar">
+        <div class="title-text" onmousedown="dragInit(event, 'kiWin')">🤖 KI Assistent Alpha</div>
+        <div class="controls">
+            <button onclick="closeApp('kiWin')">_</button>
+            <button onclick="maxApp('kiWin')">□</button>
+            <button class="btn-close" onclick="closeApp('kiWin')">X</button>
+        </div>
     </div>
     <div class="window-content">
         <iframe src="https://ki-assistent-alpha.vercel.app/" style="width:100%; height:100%; border:none;"></iframe>
     </div>
 </div>
 
-<div class="window" id="dinoWin" style="width:600px; height:400px; top:80px; left:80px;">
-    <div class="title-bar" onmousedown="dragInit(event, 'dinoWin')">
-        <span>🦖 Dinosaur Run</span>
-        <div class="controls"><button class="btn-close" onclick="closeApp('dinoWin')">X</button></div>
+<div class="window" id="dinoWin" style="width:600px; height:400px; top:80px; left:80px;" onmousedown="focusWin(this)">
+    <div class="title-bar">
+        <div class="title-text" onmousedown="dragInit(event, 'dinoWin')">🦖 Dinosaur Run</div>
+        <div class="controls">
+            <button onclick="closeApp('dinoWin')">_</button>
+            <button onclick="maxApp('dinoWin')">□</button>
+            <button class="btn-close" onclick="closeApp('dinoWin')">X</button>
+        </div>
     </div>
     <div class="window-content">
         <iframe src="https://offline-dino-game.firebaseapp.com/" style="width:100%; height:100%; border:none;"></iframe>
     </div>
 </div>
 
-<div class="window" id="calcWin" style="width:250px; height:350px; top:150px; left:400px;">
-    <div class="title-bar" onmousedown="dragInit(event, 'calcWin')">
-        <span>🔢 Rechner</span>
-        <div class="controls"><button class="btn-close" onclick="closeApp('calcWin')">X</button></div>
+<div class="window" id="calcWin" style="width:250px; height:320px; top:150px; left:400px;" onmousedown="focusWin(this)">
+    <div class="title-bar">
+        <div class="title-text" onmousedown="dragInit(event, 'calcWin')">🔢 Rechner</div>
+        <div class="controls">
+            <button onclick="closeApp('calcWin')">_</button>
+            <button class="btn-close" onclick="closeApp('calcWin')">X</button>
+        </div>
     </div>
-    <div class="window-content" style="padding:10px;">
-        <input type="text" id="calcDisplay" style="width:100%; margin-bottom:10px; text-align:right;" readonly>
+    <div class="window-content" style="padding:15px; background: #ece9d8;">
+        <input type="text" id="calcDisplay" style="width:calc(100% - 10px); margin-bottom:15px; text-align:right; padding:5px; font-size:16px;" readonly>
         <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:5px;">
-            <button onclick="calcInput('7')">7</button><button onclick="calcInput('8')">8</button><button onclick="calcInput('9')">9</button><button onclick="calcInput('/')">/</button>
-            <button onclick="calcInput('4')">4</button><button onclick="calcInput('5')">5</button><button onclick="calcInput('6')">6</button><button onclick="calcInput('*')">*</button>
-            <button onclick="calcInput('1')">1</button><button onclick="calcInput('2')">2</button><button onclick="calcInput('3')">3</button><button onclick="calcInput('-')">-</button>
-            <button onclick="calcClear()">C</button><button onclick="calcInput('0')">0</button><button onclick="calcEval()">=</button><button onclick="calcInput('+')">+</button>
+            <button class="calc-btn" onclick="calcInput('7')">7</button><button class="calc-btn" onclick="calcInput('8')">8</button><button class="calc-btn" onclick="calcInput('9')">9</button><button class="calc-btn" onclick="calcInput('/')">/</button>
+            <button class="calc-btn" onclick="calcInput('4')">4</button><button class="calc-btn" onclick="calcInput('5')">5</button><button class="calc-btn" onclick="calcInput('6')">6</button><button class="calc-btn" onclick="calcInput('*')">*</button>
+            <button class="calc-btn" onclick="calcInput('1')">1</button><button class="calc-btn" onclick="calcInput('2')">2</button><button class="calc-btn" onclick="calcInput('3')">3</button><button class="calc-btn" onclick="calcInput('-')">-</button>
+            <button class="calc-btn" onclick="calcClear()">C</button><button class="calc-btn" onclick="calcInput('0')">0</button><button class="calc-btn" onclick="calcEval()">=</button><button class="calc-btn" onclick="calcInput('+')">+</button>
         </div>
     </div>
 </div>
 
-<div class="window" id="musicWin" style="width:400px; height:150px; top:300px; left:100px;">
-    <div class="title-bar" onmousedown="dragInit(event, 'musicWin')">
-        <span>🎵 Media Player</span>
-        <div class="controls"><button class="btn-close" onclick="closeApp('musicWin')">X</button></div>
+<div class="window" id="musicWin" style="width:400px; height:150px; top:300px; left:100px;" onmousedown="focusWin(this)">
+    <div class="title-bar">
+        <div class="title-text" onmousedown="dragInit(event, 'musicWin')">🎵 Media Player</div>
+        <div class="controls">
+            <button onclick="closeApp('musicWin')">_</button>
+            <button class="btn-close" onclick="closeApp('musicWin')">X</button>
+        </div>
     </div>
-    <div class="window-content" style="padding:20px; text-align:center;">
-        <p>Lofi Beats zum Coden</p>
+    <div class="window-content" style="padding:20px; text-align:center; display:flex; flex-direction:column; justify-content:center;">
+        <p style="margin-top:0;">Lofi Beats zum Coden</p>
         <audio controls style="width:100%;">
             <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
         </audio>
@@ -236,59 +301,83 @@
 </div>
 
 <div id="startMenu">
-    <div class="start-header"><img src="https://lh3.googleusercontent.com/u/0/d/13UK7qNSLeyCp-DrSO895B5jM6XjpKJmf" style="width:25px; border-radius:50%; vertical-align:middle;"> Admin</div>
+    <div class="start-header"><img src="https://win98icons.alexmeub.com/icons/png/user_computer-0.png" style="width:25px; border-radius:50%; vertical-align:middle; margin-right:10px;"> Admin</div>
+    <div class="start-item" onclick="openApp('calcWin')">🔢 Rechner öffnen</div>
     <div class="start-item" onclick="alert('Herunterfahren nicht möglich - das ist die Zukunft!')">💻 Ausschalten</div>
     <div class="start-item" onclick="location.reload()">🔄 Neustarten</div>
 </div>
 
 <div class="taskbar">
-    <button class="start-button" onclick="toggleStart()">start</button>
+    <button class="start-button" onclick="toggleStart(false); event.stopPropagation();">start</button>
     <div class="clock" id="clock">12:00</div>
 </div>
 
 <script>
-    // FENSTER ÖFFNEN / SCHLIEẞEN
+    let highestZ = 100; // Hält fest, was ganz vorne ist
+
+    // FENSTER ÖFFNEN / SCHLIEẞEN / MAXIMIEREN
     function openApp(id) {
         const win = document.getElementById(id);
         win.style.display = 'flex';
         focusWin(win);
-        toggleStart(true); // Schließt Startmenü falls offen
+        toggleStart(true); 
     }
 
     function closeApp(id) {
         document.getElementById(id).style.display = 'none';
+        document.getElementById(id).classList.remove('maximized');
+    }
+
+    function maxApp(id) {
+        const win = document.getElementById(id);
+        win.classList.toggle('maximized');
+        focusWin(win);
     }
 
     function toggleStart(forceClose = false) {
         const menu = document.getElementById('startMenu');
-        menu.style.display = (menu.style.display === 'block' || forceClose) ? 'none' : 'block';
+        if (forceClose) {
+            menu.style.display = 'none';
+        } else {
+            menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+        }
     }
 
     function focusWin(win) {
-        document.querySelectorAll('.window').forEach(w => w.style.zIndex = 10);
-        win.style.zIndex = 100;
+        highestZ++;
+        win.style.zIndex = highestZ;
     }
 
-    // DRAG LOGIK
+    // DRAG LOGIK (Verhindert das "Rausspringen" der Maus)
     let activeWin = null, offX = 0, offY = 0;
 
     function dragInit(e, id) {
         activeWin = document.getElementById(id);
+        if (activeWin.classList.contains('maximized')) return; // Maximiertes nicht ziehen
+        
         focusWin(activeWin);
-        offX = e.clientX - activeWin.offsetLeft;
-        offY = e.clientY - activeWin.offsetTop;
-        document.onmousemove = dragMove;
-        document.onmouseup = dragEnd;
+        // Position der Maus relativ zur oberen linken Ecke des Fensters berechnen
+        const rect = activeWin.getBoundingClientRect();
+        offX = e.clientX - rect.left;
+        offY = e.clientY - rect.top;
+        
+        document.addEventListener('mousemove', dragMove);
+        document.addEventListener('mouseup', dragEnd);
     }
 
     function dragMove(e) {
         if (activeWin) {
+            e.preventDefault(); // Verhindert markieren von Text beim Ziehen
             activeWin.style.left = (e.clientX - offX) + 'px';
             activeWin.style.top = (e.clientY - offY) + 'px';
         }
     }
 
-    function dragEnd() { activeWin = null; }
+    function dragEnd() { 
+        activeWin = null; 
+        document.removeEventListener('mousemove', dragMove);
+        document.removeEventListener('mouseup', dragEnd);
+    }
 
     // RECHNER LOGIK
     const disp = document.getElementById('calcDisplay');
@@ -299,8 +388,15 @@
     // UHR
     setInterval(() => {
         const d = new Date();
-        document.getElementById('clock').innerText = d.getHours() + ":" + String(d.getMinutes()).padStart(2, '0');
+        document.getElementById('clock').innerText = String(d.getHours()).padStart(2, '0') + ":" + String(d.getMinutes()).padStart(2, '0');
     }, 1000);
+    
+    // Desktop Klicks schließen Startmenü
+    document.body.addEventListener('click', function(e) {
+        if (!e.target.closest('#startMenu') && !e.target.closest('.start-button')) {
+            toggleStart(true);
+        }
+    });
 </script>
 
 </body>
