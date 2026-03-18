@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>KI-XP Professional</title>
+    <style>
+        :root {
+            --xp-blue: #245edb;
+            --xp-taskbar: linear-gradient(to bottom, #245edb 0%, #3f8cf3 9%, #245edb 18%, #245edb 92%, #333 100%);
+            --xp-start: linear-gradient(to bottom, #388e3c 0%, #4caf50 10%, #388e3c 90%, #1b5e20 100%);
+        }
+
+        body {
+            background: url('https://upload.wikimedia.org/wikipedia/commons/2/21/Wallpaper_Bliss.jpg') no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Tahoma', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            margin: 0;
+        }
+
+        /* DESKTOP STYLING */
+        .desktop {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+            height: calc(100vh - 40px);
+            align-content: flex-start;
+            gap: 20px;
+        }
+
+        .icon {
+            width: 80px;
+            text-align: center;
+            cursor: pointer;
+            color: white;
+            text-shadow: 2px 2px 2px rgba(0,0,0,0.8);
+            font-size: 11px;
+        }
+
+        .icon img {
+            width: 42px;
+            height: 42px;
+            display: block;
+            margin: 0 auto 5px;
+        }
+
+        /* FENSTER SYSTEM */
+        .window {
+            position: absolute;
+            background: #ece9d8;
+            border: 3px solid var(--xp-blue);
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            display: none;
+            flex-direction: column;
+            box-shadow: 4px 4px 10px rgba(0,0,0,0.4);
+            min-width: 300px;
+            z-index: 10;
+        }
+
+        .title-bar {
+            background: linear-gradient(to bottom, #0058e4 0%, #3b8cf8 10%, #0058e4 100%);
+            color: white;
+            padding: 5px 10px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: move;
+            user-select: none;
+        }
+
+        .window-content {
+            flex-grow: 1;
+            background: white;
+            margin: 2px;
+            border: 1px solid #7f9db9;
+            overflow: auto;
+        }
+
+        iframe { width: 100%; height: 100%; border: none; }
+
+        /* TASKBAR & START */
+        .taskbar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            height: 30px;
+            background: var(--xp-taskbar);
+            display: flex;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .start-button {
+            background: var(--xp-start);
+            color: white;
+            font-style: italic;
+            font-weight: bold;
+            font-size: 14px;
+            padding: 0 15px;
+            height: 100%;
+            border: none;
+            border-top-right-radius: 12px;
+            border-bottom-right-radius: 12px;
+            cursor: pointer;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.3);
+        }
+
+        .taskbar-apps {
+            display: flex;
+            margin-left: 10px;
+            gap: 5px;
+        }
+
+        .task-item {
+            background: #3a82f0;
+            color: white;
+            padding: 2px 10px;
+            border-radius: 3px;
+            font-size: 11px;
+            border: 1px solid rgba(255,255,255,0.3);
+            cursor: pointer;
+        }
+
+        .clock {
+            margin-left: auto;
+            background: #1290eb;
+            color: white;
+            padding: 0 15px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            font-size: 11px;
+            border-left: 1px solid #0856b3;
+        }
+    </style>
+</head>
+<body>
+
+<div class="desktop">
+    <div class="icon" ondblclick="openApp('kiWindow')">
+        <img src="https://lh3.googleusercontent.com/u/0/d/13UK7qNSLeyCp-DrSO895B5jM6XjpKJmf" alt="KI">
+        <span>KI Assistent</span>
+    </div>
+
+    <div class="icon" ondblclick="openApp('gameWindow')">
+        <img src="https://win98icons.alexmeub.com/icons/png/game_solitaire-0.png" alt="Spiel">
+        <span>Dino Game</span>
+    </div>
+
+    <div class="icon" ondblclick="openApp('noteWindow')">
+        <img src="https://win98icons.alexmeub.com/icons/png/notepad-0.png" alt="Notizen">
+        <span>Editor</span>
+    </div>
+</div>
+
+<div class="window" id="kiWindow" style="width:700px; height:500px; top:50px; left:50px;">
+    <div class="title-bar" onmousedown="dragStart(event, 'kiWindow')">
+        <span>🤖 KI Assistent Alpha</span>
+        <button onclick="closeApp('kiWindow')" style="background:red; color:white; border:1px solid white; cursor:pointer;">X</button>
+    </div>
+    <div class="window-content">
+        <iframe src="https://ki-assistent-alpha.vercel.app/"></iframe>
+    </div>
+</div>
+
+<div class="window" id="gameWindow" style="width:600px; height:400px; top:100px; left:150px;">
+    <div class="title-bar" onmousedown="dragStart(event, 'gameWindow')">
+        <span>🦖 Dino Run (Offline Game)</span>
+        <button onclick="closeApp('gameWindow')" style="background:red; color:white; border:1px solid white; cursor:pointer;">X</button>
+    </div>
+    <div class="window-content">
+        <iframe src="https://offline-dino-game.firebaseapp.com/"></iframe>
+    </div>
+</div>
+
+<div class="window" id="noteWindow" style="width:400px; height:300px; top:150px; left:300px;">
+    <div class="title-bar" onmousedown="dragStart(event, 'noteWindow')">
+        <span>📝 Editor</span>
+        <button onclick="closeApp('noteWindow')" style="background:red; color:white; border:1px solid white; cursor:pointer;">X</button>
+    </div>
+    <div class="window-content">
+        <textarea style="width:100%; height:100%; border:none; padding:10px; font-family:monospace;" placeholder="Schreib hier etwas..."></textarea>
+    </div>
+</div>
+
+<div class="taskbar">
+    <button class="start-button">start</button>
+    <div class="taskbar-apps" id="taskbarApps"></div>
+    <div class="clock" id="clock">12:00</div>
+</div>
+
+<script>
+    // FENSTER MANAGEMENT
+    function openApp(id) {
+        const win = document.getElementById(id);
+        win.style.display = 'flex';
+        win.style.zIndex = 100; // Nach vorne bringen
+    }
+
+    function closeApp(id) {
+        document.getElementById(id).style.display = 'none';
+    }
+
+    // DRAG LOGIK (UNIVERSAL)
+    let activeWin = null;
+    let offset = [0,0];
+
+    function dragStart(e, id) {
+        activeWin = document.getElementById(id);
+        // Z-Index Management (Klick bringt Fenster nach vorne)
+        document.querySelectorAll('.window').forEach(w => w.style.zIndex = 10);
+        activeWin.style.zIndex = 100;
+
+        offset = [activeWin.offsetLeft - e.clientX, activeWin.offsetTop - e.clientY];
+        document.addEventListener('mousemove', dragMove);
+        document.addEventListener('mouseup', dragStop);
+    }
+
+    function dragMove(e) {
+        if (activeWin) {
+            activeWin.style.left = (e.clientX + offset[0]) + 'px';
+            activeWin.style.top  = (e.clientY + offset[1]) + 'px';
+        }
+    }
+
+    function dragStop() {
+        activeWin = null;
+        document.removeEventListener('mousemove', dragMove);
+    }
+
+    // UHRZEIT
+    setInterval(() => {
+        const now = new Date();
+        document.getElementById('clock').innerText = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    }, 1000);
+</script>
+
+</body>
+</html>
